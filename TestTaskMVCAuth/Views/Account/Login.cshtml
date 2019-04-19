@@ -1,0 +1,32 @@
+﻿@model TestTaskMVCAuth.Models.LoginModel
+@{
+    Layout = null;
+}
+
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Please login</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div>
+        @Html.ValidationSummary()
+        <input type="hidden" name="urlStr" value="@ViewBag.urlStr" />
+        <p>
+            <label>Email</label><br />
+            @Html.EditorFor(x => x.Email)
+        </p>
+        <p>
+            <label>Пароль</label><br />
+            @Html.EditorFor(x => x.Password)
+        </p>
+        <p><button type="submit">Войти</button></p>
+    </div>
+}
+

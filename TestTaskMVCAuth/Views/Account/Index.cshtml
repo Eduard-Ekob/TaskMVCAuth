@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@if (ViewContext.HttpContext.User.IsInRole("admin"))
+{
+    <ul>
+        <li>@Html.ActionLink("Admin", "Admin")</li>
+    </ul>
+}
+
+@if (ViewContext.HttpContext.User.IsInRole("user1"))
+{
+    <ul>
+        <li>@Html.ActionLink("User1", "User1")</li>
+    </ul>
+}
+
+@if (ViewContext.HttpContext.User.IsInRole("user2"))
+{
+    <ul>
+        <li>@Html.ActionLink("User2", "User2")</li>
+    </ul>
+}
+
+
+
