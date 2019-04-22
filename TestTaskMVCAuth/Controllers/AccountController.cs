@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Provider;
 using TestTaskMVCAuth.Models;
 
 namespace TestTaskMVCAuth.Controllers
@@ -66,35 +67,70 @@ namespace TestTaskMVCAuth.Controllers
             ViewBag.urlStr = urlStr;
             return View(model);
         }
-
+        
         public ActionResult Logout()
         {
             AuthenticationManager.SignOut();
             return RedirectToAction("Login");
         }
 
-        [Authorize(Roles = "admin, user1, user2")]
+        [CustomAuthorize(Roles = "admin, user1, user2")]
         public ActionResult Index()
         {
             return View("~/Views/Account/Index.cshtml");
         }
 
-        [Authorize(Roles = "admin")]
+        [CustomAuthorize(Roles = "admin, user1")]
         public ActionResult Admin()
         {
             return View("~/Views/Account/admin.cshtml");
         }
 
-        [Authorize(Roles = "admin, user1")]
+        [CustomAuthorize(Roles = "admin, user1")]
         public ActionResult User1()
         {
             return View("~/Views/Account/view1.cshtml");
         }
 
-        [Authorize(Roles = "admin, user2")]
+        [CustomAuthorize(Roles = "admin, user2")]
         public ActionResult User2()
         {
             return View("~/Views/Account/view2.cshtml");
+        }
+        
+        public ActionResult AccessDenied()
+        {
+            return View("~/Views/Account/AccessDenied.cshtml");
+        }
+
+        public ActionResult RequestLogin()
+        {
+            return View("~/Views/Account/RequestLogin.cshtml");
+        }
+    }
+
+    /// <summary>
+    /// For custom authorization attribute
+    /// </summary>
+    public class CustomAuthorize : AuthorizeAttribute
+    {
+        protected override bool AuthorizeCore(HttpContextBase httpContext)
+        {
+            var isAuthorized = base.AuthorizeCore(httpContext);
+
+            if (!httpContext.User.Identity.IsAuthenticated)
+            {
+                httpContext.Response.Redirect("/Account/RequestLogin");
+                return false;
+            }
+
+            if (!isAuthorized)
+            {
+                httpContext.Response.Redirect("/Account/AccessDenied");
+                return false;
+            }
+
+            return true;
         }
     }
 }

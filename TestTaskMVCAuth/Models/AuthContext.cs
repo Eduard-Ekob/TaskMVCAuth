@@ -20,9 +20,6 @@ namespace TestTaskMVCAuth.Models
         }
     }
 
-
-
-
     public class AuthDbInit : DropCreateDatabaseIfModelChanges<AuthContext>
     {
         protected override void Seed(AuthContext context)
